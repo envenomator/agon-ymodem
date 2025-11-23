@@ -61,9 +61,12 @@ bool check_files(int filecount, char *filelist[]) {
 void send_files(int filecount, char *filelist[]) {
   unsigned int filename_length;
   unsigned int filesize;
+  unsigned int remaining;
   char filename[MAXNAMELENGTH+1];
   uint8_t mosfh;
   uint8_t buffer[YMODEM_PACKET_1K_SIZE];
+
+  remaining = filecount;
 
   if(!set_VDP_ymodem(YMODEM_SEND)) return; 
 
@@ -72,16 +75,17 @@ void send_files(int filecount, char *filelist[]) {
     mosfh = mos_fopen(filelist[filenumber], FA_READ);
     if(mosfh == 0) {
       writeint(0);
+      printf("Error MOS\r\n");
       return;
     }
-    else writeint(filecount);
+    else writeint(remaining);
 
     filename_length = strlen(filelist[filenumber]);
     writeint(filename_length);
     strcpy(filename, filelist[filenumber]);
     putblock(filename, filename_length);  // send filename
     filesize = getfilesize(mosfh);
-    
+  
     unsigned int write_len;
     writeint(filesize);
 
@@ -94,7 +98,7 @@ void send_files(int filecount, char *filelist[]) {
     writeint(crc32_finalize());
     mos_fclose(mosfh);
 
-    filecount--;
+    remaining--;
   }
 
   writeint(0);
@@ -106,10 +110,6 @@ void print_usage(void) {
 }
 
 int main(int argc, char **argv) {
-  char dir[MAXDIRLENGTH+1];
-  int filenumber;
-  bool receive = true;
-
   sysvar_init();
 
   if(argc == 1) {
