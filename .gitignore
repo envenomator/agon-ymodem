@@ -1,0 +1,71 @@
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+*.lst
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# Debug and build directories
+Debug/
+x64/
+
+# Linux build directories
+*/bin/
+*/obj/
+
+# Visual studio
+src/.vs/
+*.vsidx
+*Browse.VC.db
+*.suo
+
+# VScode
+.vscode/
+
+# vi swap files
+*.swp
+
+# MacOS
+.DS_Store
+
+# Compiled binaries
+*.bin
