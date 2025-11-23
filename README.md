@@ -32,19 +32,24 @@ The 'lrzsz' package may be used, using 'rz' for receiving and 'sz' for sending f
 ### Sending files to your Agon
 Sending all files from a 'test' directory, using 1K blocks:
 ```
-stty -f /dev/ttyUSB0 115200 & sz -k --ymodem ./test/* 1>/dev/ttyUSB0 0</dev/ttyUSB0
+stty -F /dev/ttyUSB0 115200 & sz -k --ymodem ./test/* 1>/dev/ttyUSB0 0</dev/ttyUSB0
 ```
+**MacOS users should use stty -f instead of -F**
+
 Start the MOS utility, optionally give it a directory name. The transfer starts as soon as the utility starts.
 ```
 ry [directory]
 ```
 ### Receiving files to your PC
 Start the MOS utility, provide it with all files to send to your PC:
-    sy <filename> [filename ...]
-
+```
+sy <filename> [filename ...]
+```
 Receiving all files to the current directory. The transfer starts as soon as the rz utility starts:
-    stty -f /dev/ttyUSB0 115200 & rz --overwrite --ymodem 1>/dev/ttyUSB0 0</dev/ttyUSB0
-
+```
+stty -F /dev/ttyUSB0 115200 & rz --overwrite --ymodem 1>/dev/ttyUSB0 0</dev/ttyUSB0
+```
+**MacOS users should use stty -f instead of -F**
 
 ## Python YMODEM module
 ### Setup
