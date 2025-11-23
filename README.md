@@ -5,7 +5,7 @@ provide an easy mechanism to send/receive files to/from your Agon filesystem, us
 # Installation
 Copy 'ry.bin' and 'sy.bin' to the /bin/ directory on the microSD card. If no such directory exists, create it first using the 'mkdir' command.
 
-The utility requires at least MOS v2.2.0. VDP needs ymodem support, which has not been released publicly yet.
+The utility requires at least MOS v2.2.0. VDP needs ymodem support, which has not been released publicly yet. You can find a patched firmware.bin in the [releases](https://github.com/envenomator/agon-ymodem/releases) folder, that you can flash to your VDP for testing. You can return to a recent official version of the VDP using the [VDP installer](https://envenomator.github.io/)
 
 # Usage
 
