@@ -1,4 +1,3 @@
-#include "serial_enum_filtered.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -7,19 +6,20 @@
 #include <errno.h>
 #include <string.h>
 #include <getopt.h>
+#include <limits.h>
 
 #include "ymodem.h"
 #include "serial.h"
+#include "serial_enum_filtered.h"
 
 #define DEFAULT_BAUDRATE        115200
-#define MAX_DEVICE_NAMELENGTH   256
 
 void usage(const char *progname) {
   printf("Usage: %s <-b baud> <-d device> [ [-r] | <-s> [file(s)] ]\n", progname);
 }
 
 int main(int argc, char** argv) {
-  char devicename[MAX_DEVICE_NAMELENGTH + 1];
+  char devicename[NAME_MAX + 1];
   int serial_port, opt;
   const char *device = devicename;
   int baud = DEFAULT_BAUDRATE;

@@ -320,11 +320,11 @@ bool YMODEMSession::writeFiles(void) {
     case 0: return true;
     case 1:
       wipe32chars_restartline();
-      printf("\nWriting file - ");
+      printf("\nWriting file");
       break;
     default:
       wipe32chars_restartline();
-      printf("\nWriting %d files - ", (int)_filecount);
+      printf("\nWriting %d files", (int)_filecount);
   }
 
   for(int i = 0; i < (int)_filecount; i++) {

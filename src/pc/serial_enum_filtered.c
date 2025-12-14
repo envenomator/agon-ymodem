@@ -43,10 +43,11 @@ int serial_autodetect( char *devicename ) {
       printf("Autodetected: %s\n", devicename);
       break;
     default:
-      printf("Multiple devices found\n"); 
+      printf("Multiple devices found:\n"); 
       for(int i = 0; i < n; i++) {
         printf("%d - %s\n", i, filtered[i].devnode);
       }
+      printf("\nSelect a device with the -d option\n");
   }
   return n;
 }
