@@ -1,3 +1,7 @@
+# Environment
+OS_NAME = $(shell uname -s | tr A-Z a-z)
+ARCH = $(shell uname -m | tr A-Z a-z)
+
 # Detect platform
 UNAME_S := $(shell uname -s)
 
@@ -33,7 +37,7 @@ TARGET := ymodem
 
 # Default target
 all: $(TARGET)
-
+	@tar -zcvf ymodem-$(OS_NAME)_$(ARCH).tar.gz ymodem 2>/dev/null
 # Link all objects with C++ compiler (needed if any .cpp files exist)
 $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
