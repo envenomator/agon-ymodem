@@ -6,8 +6,8 @@ CC := gcc
 CXX := g++
 
 # Flags
-CFLAGS  := -std=c11 -Wall -Wextra -O2
-CXXFLAGS := -std=c++17 -Wall -Wextra -O2
+CFLAGS  := -std=c11 -Wall -Wextra -O2 -D_DEFAULT_SOURCE
+CXXFLAGS := -std=c++17 -Wall -Wextra -O2 -D_DEFAULT_SOURCE
 LDFLAGS :=
 
 # OS-specific flags
