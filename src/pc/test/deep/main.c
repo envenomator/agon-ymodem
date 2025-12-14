@@ -7,7 +7,6 @@
 #include <string.h>
 #include <getopt.h>
 #include <limits.h>
-#include <libgen.h>
 
 #include "ymodem.h"
 #include "serial.h"
@@ -16,9 +15,7 @@
 #define DEFAULT_BAUDRATE        115200
 
 void usage(const char *progname) {
-  printf("Usage:\n");
-  printf("  %s [-b baudrate] [-d device] -r                   Receive mode\n", progname);
-  printf("  %s [-b baudrate] [-d device] -s file1 [file2 ...] Send mode, at least one file required\n", progname);
+  printf("Usage: %s <-b baud> <-d device> [ -r | -s [file(s)] ]\n", progname);
 }
 
 int main(int argc, char** argv) {
@@ -41,21 +38,20 @@ int main(int argc, char** argv) {
       baud = atoi(optarg);
       break;
     case 's': 
-      if(receive) { usage(basename(argv[0])); return -1;}
+      if(receive) { usage(argv[0]); return -1;}
       send = true;
       break;
     case 'r':
-      if(send) { usage(basename(argv[0])); return -1;}
+      if(send) { usage(argv[0]); return -1;}
       receive = true;
       break;
     case 'h':
     default:
-      usage(basename(argv[0]));
+      usage(argv[0]);
       return 0;
     }
   }
-
-  if(!send && !receive) { usage(basename(argv[0])); return 0; }
+  
   // Autodetect devicename if none given as option
   if(auto_device && serial_autodetect(devicename) != 1) return -1;
 
@@ -71,7 +67,7 @@ int main(int argc, char** argv) {
 
   if(send) {
     if(filecount <= 0) {
-      usage(basename(argv[0]));
+      usage(argv[0]);
       return -1;
     }
     ymodem_send(serial_port, filecount, filenames);
@@ -79,7 +75,7 @@ int main(int argc, char** argv) {
 
   if(receive) {
     if(filecount > 0) {
-      usage(basename(argv[0]));
+      usage(argv[0]);
       return -1;
     }
     ymodem_receive(serial_port);

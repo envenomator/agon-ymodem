@@ -3,30 +3,50 @@ The purpose of these utilities is to
 provide an easy mechanism to send/receive files to/from your Agon filesystem, using the VDP's USB-Serial port.
 
 # Installation
-Copy 'ry.bin' and 'sy.bin' to the /bin/ directory on the microSD card. If no such directory exists, create it first using the 'mkdir' command.
+Copy 'ymodem.bin' to the /bin/ directory on the microSD card. If no such directory exists, create it first using the 'mkdir' command.
 
 The utility requires at least MOS v2.2.0. VDP needs ymodem support, which has not been released publicly yet. You can find a patched firmware.bin in the [releases](https://github.com/envenomator/agon-ymodem/releases) folder, that you can flash to your VDP for testing. You can return to a recent official version of the VDP using the [VDP installer](https://envenomator.github.io/)
 
 # Usage
+## Agon ymodem utility
+```
+    Usage:
+      ymodem -r [directory]       Receive mode, optional target directory
+      ymodem -s file1 [file2 ...] Send mode, at least one file required
+```
 
 ### Sending files from Agon
+On the Agon side:
 ```
-sy <filename> [filename ...]
+ymodem -s [filename ...]
+```
+On the PC side:
+```
+ymodem -r
 ```
 Sending an entire directory is still a work-in-progress.
 
 ### Receiving files to Agon
+On the Agon side:
 ```
-ry [directory]
+ymodem -r [directory]
 ```
+On the PC side:
+```
+ymodem -s [filename ...]
+```
+
 # Serial connectivity
-Connect the VDP USB port to your PC and find the name of it's serial device. This may be /dev/ttyUSB0 under Linux, /dev/cu.usbXXX under MacOS and COMXXX under Windows.
+Connect the VDP USB port to your PC and find the name of it's serial device. This may be /dev/ttyUSB0 under Linux, /dev/cu.usbserialXXX under MacOS and COMXXX under Windows.
 
 The compiled-in VDP serial baudrate is 115200, 8 bits, 1 stopbit, no parity (8N1)
 
 # PC utility examples
-Below example assumes the usage of a /dev/ttyUSB0 device. Your setup will likely be different.
+## YMODEM utility
+The ymodem utility can be downloaded from the release folder. It tries to autodetect the USB-serial interface. If multiple such interfaces are present on the system, it lists them and exits the program. A specific device can be selected using the '-d' flag.
+
 ## LRZSZ
+This example assumes the usage of a /dev/ttyUSB0 device. Your setup will likely be different.
 The 'lrzsz' package may be used, using 'rz' for receiving and 'sz' for sending files to/from your PC. The package does not provide a way to directly talk to the serial port, not set the baudrate, so that has to be done using redirections and using the stty command. 
 
 ### Sending files to your Agon
@@ -52,6 +72,7 @@ stty -F /dev/ttyUSB0 115200 & rz --overwrite --ymodem 1>/dev/ttyUSB0 0</dev/ttyU
 **MacOS users should use stty -f instead of -F**
 
 ## Python YMODEM module
+This example assumes the usage of a /dev/ttyUSB0 device. Your setup will likely be different.
 ### Setup
 Using macOS or Linux, I usually create a python virtual environment for this using these steps
 ```
