@@ -20,6 +20,7 @@ int serial_enumerate_filtered( serial_device_t *out, int max_devices) {
             continue;
 
         if (strstr(name, "serial") ||
+            strstr(name, "USB") ||
             strstr(name, "ACM")) {
             out[count++] = tmp[i];  // struct copy
         }

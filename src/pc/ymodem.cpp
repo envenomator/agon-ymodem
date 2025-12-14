@@ -90,20 +90,19 @@ static bool serialRx_byte_t (uint8_t *c, uint64_t timeout_ms) {
 
 static void send_ack (void) {
   uint8_t c = YMODEM_ACK;
-  write(serial_port, &c, 1);
+  [[maybe_unused]] auto _ = write(serial_port, &c, 1);
 }
 static void send_nak (void) {
   uint8_t c = YMODEM_NAK;
-  write(serial_port, &c, 1);
+  [[maybe_unused]] auto _ = write(serial_port, &c, 1);
 }
 static void send_reqcrc (void) {
   uint8_t c = YMODEM_DEFCRC16;
-  write(serial_port, &c, 1);
+  [[maybe_unused]] auto _ = write(serial_port, &c, 1);
 }
 static void send_abort (void) {
-  uint8_t c = YMODEM_CAN;
-  write(serial_port, &c, 1);
-  write(serial_port, &c, 1);
+  uint8_t c[] = {YMODEM_CAN,YMODEM_CAN};
+  [[maybe_unused]] auto _ = write(serial_port, &c, 2);
 }
 
 // Eat all uart RX during a specific time period
@@ -112,13 +111,13 @@ static void uart_flush(void) {
   uint8_t c;
 
   while(millis() - timeReceived < YMODEM_FLUSHTIME) {
-    read(serial_port, &c, 1);
+    [[maybe_unused]] auto _ = read(serial_port, &c, 1);
   }
   return;
 }
 
 static int io_write(const uint8_t *data, int len) {
-    write(serial_port, data, len);
+    [[maybe_unused]] auto _ = write(serial_port, data, len);
   return len;
 }
 
@@ -655,6 +654,7 @@ void ymodem_receive_cpp(int port) {
   printf("Receiving data\r\n\r\n");
 
   errors = 0;
+  cancel_counter = 0;
   timeout_counter = 0;
   ymodem_session_aborted = false;
   session_done = false;

@@ -2,8 +2,8 @@
 UNAME_S := $(shell uname -s)
 
 # Compiler
-CC := clang
-CXX := clang++
+CC := gcc
+CXX := g++
 
 # Flags
 CFLAGS  := -std=c11 -Wall -Wextra -O2

@@ -6,6 +6,8 @@
 #include <fcntl.h> 
 #include <errno.h>
 #include <string.h>
+#include <getopt.h>
+
 #include "ymodem.h"
 #include "serial.h"
 
