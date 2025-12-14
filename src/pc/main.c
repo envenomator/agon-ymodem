@@ -9,11 +9,18 @@
 #include "ymodem.h"
 #include "serial.h"
 
+#define DEFAULT_BAUDRATE        115200
+#define MAX_DEVICE_NAMELENGTH   256
+
+void usage(const char *progname) {
+  printf("Usage: %s <-b baud> <-d device> [ [-r] | <-s> [file(s)] ]\n", progname);
+}
+
 int main(int argc, char** argv) {
-  char devicename[256];
+  char devicename[MAX_DEVICE_NAMELENGTH + 1];
   int serial_port, opt;
   const char *device = devicename;
-  int baud = 115200;
+  int baud = DEFAULT_BAUDRATE;
   bool auto_device = true;
   bool send = true;
 
@@ -33,7 +40,7 @@ int main(int argc, char** argv) {
       break;
     case 'h':
     default:
-      printf("Usage: %s [-s | -r] <-d device> <-b baud> [file(s)]\n", argv[0]);
+      usage(argv[0]);
       return 0;
     }
   }
@@ -48,24 +55,21 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  // Diagnostics
-  //printf("device=%s baud=%d send=%d\n", device, baud, send);  
-  //printf("Files:\n");
-  //for (int i = optind; i < argc; i++) {
-  //    printf("File %d: %s\n", i - optind + 1, argv[i]);
-  //}
-
   int filecount = argc - optind;
   char **filenames = &argv[optind];
 
   if(send) {
     if(filecount <= 0) {
-      printf("No input files\n");
+      usage(argv[0]);
       return -1;
     }
     ymodem_send(serial_port, filecount, filenames);
   }
   else {
+    if(filecount > 0) {
+      usage(argv[0]);
+      return -1;
+    }
     ymodem_receive(serial_port);
   }
   // Clean-up
