@@ -15,7 +15,7 @@
 #define DEFAULT_BAUDRATE        115200
 
 void usage(const char *progname) {
-  printf("Usage: %s <-b baud> <-d device> [ [-r] | <-s> [file(s)] ]\n", progname);
+  printf("Usage: %s <-b baud> <-d device> [ -r | -s [file(s)] ]\n", progname);
 }
 
 int main(int argc, char** argv) {
@@ -24,7 +24,8 @@ int main(int argc, char** argv) {
   const char *device = devicename;
   int baud = DEFAULT_BAUDRATE;
   bool auto_device = true;
-  bool send = true;
+  bool send = false;
+  bool receive = false;
 
   // Process options
   while ((opt = getopt(argc, argv, "srd:b:h")) != -1) {
@@ -36,9 +37,13 @@ int main(int argc, char** argv) {
     case 'b':
       baud = atoi(optarg);
       break;
-    case 's': break;
+    case 's': 
+      if(receive) { usage(argv[0]); return -1;}
+      send = true;
+      break;
     case 'r':
-      send = false;
+      if(send) { usage(argv[0]); return -1;}
+      receive = true;
       break;
     case 'h':
     default:
@@ -67,13 +72,15 @@ int main(int argc, char** argv) {
     }
     ymodem_send(serial_port, filecount, filenames);
   }
-  else {
+
+  if(receive) {
     if(filecount > 0) {
       usage(argv[0]);
       return -1;
     }
     ymodem_receive(serial_port);
   }
+
   // Clean-up
   close(serial_port);
   return 0;

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libgen.h>
 #include "CRC16.h"
 #include "CRC32.h"
 #include "millis.h"
@@ -294,7 +295,7 @@ bool YMODEMSession::readFiles(int filecount, char **filenames) {
     if(fseek(fp, 0, SEEK_END) != 0) { fclose(fp); return false; }
     size_t filesize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
-    if(!addFile(filenames[n], filesize)) { printf("\nMemory allocated error\n"); fclose(fp); return false; }
+    if(!addFile(basename(filenames[n]), filesize)) { printf("\nMemory allocated error\n"); fclose(fp); return false; }
 
     if(fread(f.buffer, 1, filesize, fp) != filesize) { printf("\nError reading \'%s\'\n", filenames[n]); fclose(fp); return false; }
 
