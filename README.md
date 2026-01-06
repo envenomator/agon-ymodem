@@ -18,11 +18,11 @@ The utility requires at least MOS v2.2.0. VDP needs ymodem support, which has no
 ### Sending files from Agon
 On the Agon side:
 ```
-ymodem -s [filename ...]
+ymodem -s file1 [file2 ...]
 ```
 On the PC side:
 ```
-ymodem -r
+ymodem -r [directory]
 ```
 Sending an entire directory is still a work-in-progress.
 
@@ -33,7 +33,7 @@ ymodem -r [directory]
 ```
 On the PC side:
 ```
-ymodem -s [filename ...]
+ymodem -s file1 [file2 ...]
 ```
 
 # Serial connectivity
@@ -58,12 +58,12 @@ stty -F /dev/ttyUSB0 115200 & sz -k --ymodem ./test/* 1>/dev/ttyUSB0 0</dev/ttyU
 
 Start the MOS utility, optionally give it a directory name. The transfer starts as soon as the utility starts.
 ```
-ry [directory]
+ymodem -r [directory]
 ```
 ### Receiving files to your PC
 Start the MOS utility, provide it with all files to send to your PC:
 ```
-sy <filename> [filename ...]
+ymodem -s file1 [file2 ...]
 ```
 Receiving all files to the current directory. The transfer starts as soon as the rz utility starts:
 ```
@@ -94,12 +94,12 @@ ymodem send ./test/* -p /dev/ttyUSB0 -b 115200
 ```
 Start the MOS utility, optionally give it a directory name. The transfer starts as soon as the utility starts.
 ```
-ry [directory]
+ymodem -r [directory]
 ```
 ### Receiving files to your PC
 Start the MOS utility, provide it with all files to send to your PC:
 ```
-sy <filename> [filename ...]
+ymodem -s file1 [file2 ...]
 ```
 Start the ymodem receive function, storing all files to your local directory:
 ```    
