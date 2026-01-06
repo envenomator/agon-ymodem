@@ -8,6 +8,7 @@
 #include <getopt.h>
 #include <limits.h>
 #include <libgen.h>
+#include <sys/stat.h>
 
 #include "ymodem.h"
 #include "serial.h"
@@ -17,12 +18,25 @@
 
 void usage(const char *progname) {
   printf("Usage:\n");
-  printf("  %s [-b baudrate] [-d device] -r                   Receive mode\n", progname);
+  printf("  %s [-b baudrate] [-d device] -r [directory]       Receive mode, optional target directory\n", progname);
   printf("  %s [-b baudrate] [-d device] -s file1 [file2 ...] Send mode, at least one file required\n", progname);
+}
+
+int is_directory(const char *path) {
+#ifdef _WIN32
+    struct _stat st;
+    if (_stat(path, &st) != 0) return 0;
+    return (st.st_mode & _S_IFDIR) != 0;
+#else
+    struct stat st;
+    if (stat(path, &st) != 0) return 0;
+    return S_ISDIR(st.st_mode);
+#endif
 }
 
 int main(int argc, char** argv) {
   char devicename[NAME_MAX + 1];
+  char *dir;
   int serial_port, opt;
   const char *device = devicename;
   int baud = DEFAULT_BAUDRATE;
@@ -78,11 +92,31 @@ int main(int argc, char** argv) {
   }
 
   if(receive) {
-    if(filecount > 0) {
+    if(filecount > 1) {
       usage(basename(argv[0]));
       return -1;
     }
-    ymodem_receive(serial_port);
+    if(filecount == 1) {
+      if(is_directory(filenames[0]) == 0) {
+        printf("Invalid path \'%s\'\n", filenames[0]);
+        return 0;
+      }
+      dir = malloc(strlen(filenames[0]) + 2); // allowing possible extra '/'
+      if(!dir) {
+        printf("Memory allocation error\n");
+        return 0;
+      }
+      strcpy(dir, filenames[0]);
+      if(dir[strlen(dir)-1] != '/') strcat(dir, "/");
+
+      printf("Receive path %s\n", dir);
+    }
+    else {
+      dir = malloc(3);
+      strcpy(dir, "./");
+    }
+    ymodem_receive(serial_port, dir);
+    free(dir);
   }
 
   // Clean-up

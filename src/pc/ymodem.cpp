@@ -218,6 +218,7 @@ class YMODEMSession {
     void debug(void);
 
     bool addFile(const char* filename, size_t filesize);
+    bool addFile(const char* dir, const char *filename, size_t filesize);
     bool addData(const uint8_t *data, size_t length);
     bool writeFiles(void); // Sends all stored files to the YMODEM utility
     bool readFiles(int filecount, char ** filenames); // Reads all files from the YMODEM utility to memory
@@ -349,6 +350,15 @@ size_t YMODEMSession::getFilesize(void) {
 bool YMODEMSession::open(void) {
   //vsp->sendKeycodeByte('C',false);
   return true;
+}
+
+bool YMODEMSession::addFile(const char* dir, const char *filename, size_t filesize) {
+  char *name = (char*)malloc(strlen(dir) + strlen(filename) + 1);
+  strcpy(name, dir);
+  strcat(name, filename);
+  if(!name) return false;
+
+  return(addFile(name, filesize));
 }
 
 bool YMODEMSession::addFile(const char* filename, size_t filesize) {
@@ -639,7 +649,7 @@ void ymodem_send(int port, int filecount, char ** filenames) {
 
 
 
-void ymodem_receive_cpp(int port) {
+void ymodem_receive_cpp(int port, const char *dir) {
   YMODEMSession session;
   bool session_done;
   bool receiving_data;
@@ -699,7 +709,7 @@ void ymodem_receive_cpp(int port) {
           send_ack();
           if((!receiving_data) && (block.blocknumber == 0)) {
             // Header block
-            if(!session.addFile(block.filename, block.filesize)) {
+            if(!session.addFile(dir, block.filename, block.filesize)) {
               printf("\r\nError allocating memory\r\n");
               ymodem_session_aborted = true;
             }
@@ -754,8 +764,8 @@ void ymodem_receive_cpp(int port) {
 
 extern "C" {
 
-void ymodem_receive(int port) {
-    ymodem_receive_cpp(port);
+void ymodem_receive(int port, const char *dir) {
+    ymodem_receive_cpp(port, dir);
 }
 
 } // extern "C"

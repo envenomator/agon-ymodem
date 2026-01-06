@@ -297,11 +297,13 @@ int main(int argc, char **argv) {
 
     if(filecount == 1) {
       if(mos_isdirectory(filenames[0]) != 0) {
-        printf("Invalid path\r\n");
+        printf("Invalid path \'%s\'\r\n", filenames[0]);
         return 0;
       }
       strcpy(dir, filenames[0]);
       if(dir[strlen(dir)-1] != '/') strcat(dir, "/");
+
+      printf("Receive path %s\r\n", dir);
     }
     else strcpy(dir, "./");
 
