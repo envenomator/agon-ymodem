@@ -8,6 +8,7 @@
 #include "CRC32.h"
 #include "millis.h"
 #include "serial.h"
+#include <unistd.h>
 
 // YMODEM protocol constants
 #define YMODEM_MAX_NAME_LENGTH         100
@@ -81,7 +82,7 @@ static bool serialRx_byte_t (uint8_t *c, uint64_t timeout_ms) {
 
   while((millis() - timeReceived) < timeout_ms) {
     //printf("%d\n", (int)millis());
-    if(read(serial_port, c, 1) == 1) {
+    if(serial_read(serial_port, c, 1) == 1) {
       //printf("Read value: 0x%0X\n", *c);
       return true;
     }
@@ -112,7 +113,7 @@ static void uart_flush(void) {
   uint8_t c;
 
   while(millis() - timeReceived < YMODEM_FLUSHTIME) {
-    [[maybe_unused]] auto _ = read(serial_port, &c, 1);
+    [[maybe_unused]] auto _ = serial_read(serial_port, &c, 1);
   }
   return;
 }
