@@ -119,25 +119,12 @@ serial_handle_t serial_open(const char *path, int baud)
     if (tcgetattr(fd, &tio) != 0)
         goto error;
 
-#ifdef __linux__
     cfmakeraw(&tio);
-#else
-    /* macOS compatibility */
-    tio.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP |
-                     INLCR | IGNCR | ICRNL | IXON);
-    tio.c_oflag &= ~OPOST;
-    tio.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    tio.c_cflag &= ~(CSIZE | PARENB);
-    tio.c_cflag |= CS8;
-#endif
 
     tio.c_cflag |= CLOCAL | CREAD;
-    tio.c_cflag &= ~CSTOPB;
-    tio.c_cflag &= ~PARENB;
-
-#ifdef CRTSCTS
-    tio.c_cflag &= ~CRTSCTS;
-#endif
+    tio.c_cflag &= ~CRTSCTS;   // no HW flow control
+    tio.c_cflag &= ~CSTOPB;    // 1 stop bit
+    tio.c_cflag &= ~PARENB;    // no parity
 
     speed_t speed;
     switch (baud) {
@@ -154,18 +141,16 @@ serial_handle_t serial_open(const char *path, int baud)
     cfsetispeed(&tio, speed);
     cfsetospeed(&tio, speed);
 
-    /* Blocking reads */
-    tio.c_cc[VMIN]  = 1;
+    tio.c_cc[VMIN]  = 0;
     tio.c_cc[VTIME] = 0;
 
     if (tcsetattr(fd, TCSANOW, &tio) != 0)
         goto error;
 
-#ifdef __APPLE__
+    // macOS needs this to avoid blocking forever
     ioctl(fd, TIOCEXCL);
-#endif
 
-    /* Switch back to blocking */
+    // Switch back to blocking if desired
     fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~O_NONBLOCK);
 
     return fd;

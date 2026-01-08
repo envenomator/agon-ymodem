@@ -92,19 +92,19 @@ static bool serialRx_byte_t (uint8_t *c, uint64_t timeout_ms) {
 
 static void send_ack (void) {
   uint8_t c = YMODEM_ACK;
-  [[maybe_unused]] auto _ = write(serial_port, &c, 1);
+  [[maybe_unused]] auto _ = serial_write(serial_port, &c, 1);
 }
 static void send_nak (void) {
   uint8_t c = YMODEM_NAK;
-  [[maybe_unused]] auto _ = write(serial_port, &c, 1);
+  [[maybe_unused]] auto _ = serial_write(serial_port, &c, 1);
 }
 static void send_reqcrc (void) {
   uint8_t c = YMODEM_DEFCRC16;
-  [[maybe_unused]] auto _ = write(serial_port, &c, 1);
+  [[maybe_unused]] auto _ = serial_write(serial_port, &c, 1);
 }
 static void send_abort (void) {
   uint8_t c[] = {YMODEM_CAN,YMODEM_CAN};
-  [[maybe_unused]] auto _ = write(serial_port, &c, 2);
+  [[maybe_unused]] auto _ = serial_write(serial_port, &c, 2);
 }
 
 // Eat all uart RX during a specific time period
@@ -119,7 +119,7 @@ static void uart_flush(void) {
 }
 
 static int io_write(const uint8_t *data, int len) {
-    [[maybe_unused]] auto _ = write(serial_port, data, len);
+    [[maybe_unused]] auto _ = serial_write(serial_port, data, len);
   return len;
 }
 
