@@ -285,11 +285,11 @@ size_t YMODEMSession::getFilecount(void) {
 }
 
 bool YMODEMSession::readFiles(int filecount, char **filenames) {
-  ymodem_fileinfo_t &f = files[_filecount];
 
   printf("Reading file(s)...");
 
   for(int n = 0; n < filecount; n++) {
+    ymodem_fileinfo_t &f = files[_filecount];
     FILE *fp = fopen(filenames[n], "rb");
     if(!fp) { printf("\nError opening \'%s\'\n", filenames[n]); return false; }
 
