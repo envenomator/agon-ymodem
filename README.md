@@ -105,3 +105,42 @@ Start the ymodem receive function, storing all files to your local directory:
 ```    
 ymodem recv -p /dev/cu.usbserial-02B1CCC5 -b 115200 .
 ```
+
+## tio (macOS / Linux)
+[tio](https://github.com/tio/tio) is a simple and feature-rich serial terminal that supports YMODEM file transfers directly.
+
+### Installation (macOS with Homebrew)
+```bash
+brew install tio
+```
+
+### Finding your serial device
+List connected serial devices:
+```bash
+tio -l
+```
+
+### Sending files to your Agon
+1. On the Agon, start receive mode:
+   ```
+   ymodem -r [directory]
+   ```
+2. Connect to the Agon using `tio` (default baudrate is 115200):
+   ```bash
+   tio /dev/cu.usbserialXXX
+   ```
+3. Press `ctrl-t` followed by `y` to initiate a YMODEM send.
+4. Enter the path of the file to send at the prompt.
+5. Exit `tio` when finished using `ctrl-t` followed by `q`.
+
+### Receiving files to your Mac
+1. Start the MOS utility on Agon with the files to send:
+   ```
+   ymodem -s file1 [file2 ...]
+   ```
+2. Run `rz` with I/O redirection through `tio`:
+   ```bash
+   tio --exec "rz --overwrite --ymodem" /dev/cu.usbserialXXX
+   ```
+   Or use the standalone `ymodem` / `rz` / Python utility.
+
