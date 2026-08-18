@@ -114,18 +114,23 @@ ymodem recv -p /dev/cu.usbserial-02B1CCC5 -b 115200 .
 brew install tio
 ```
 
-### Finding your serial device
+### Finding your serial device & connecting
 List connected serial devices:
 ```bash
 tio -l
 ```
+Connect to the Agon (default baudrate is 115200):
+```bash
+tio /dev/cu.usbserialXXX
+```
+> **Note**: To exit `tio` at any time, press `ctrl-t` followed by `q`. You can also press `ctrl-t ?` to view all available session key commands.
 
 ### Sending files to your Agon
 1. On the Agon, start receive mode:
    ```
    ymodem -r [directory]
    ```
-2. Connect to the Agon using `tio` (default baudrate is 115200):
+2. Connect to the Agon using `tio` (or within an existing session):
    ```bash
    tio /dev/cu.usbserialXXX
    ```
