@@ -75,24 +75,24 @@ stty -F /dev/ttyUSB0 115200 & rz --overwrite --ymodem 1>/dev/ttyUSB0 0</dev/ttyU
 This example assumes the usage of a /dev/ttyUSB0 device. Your setup will likely be different.
 ### Setup
 Using macOS or Linux, I usually create a python virtual environment for this using these steps
-```
+```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install ymodem
 ```
 
 and then use
-```
+```bash
 deactivate
 ```
 when I'm done receiving/sending files
 
 ### Sending files to your Agon
 Sending all files from 'test' directory:
+```bash
+python -m ymodem send ./test/* -p /dev/ttyUSB0 -b 115200
 ```
-ymodem send ./test/* -p /dev/ttyUSB0 -b 115200
-```
-Start the MOS utility, optionally give it a directory name. The transfer starts as soon as the utility starts.
+Start the MOS utility, optionally give it a directory name. The transfer starts as soon as the utility starts:
 ```
 ymodem -r [directory]
 ```
@@ -102,12 +102,14 @@ Start the MOS utility, provide it with all files to send to your PC:
 ymodem -s file1 [file2 ...]
 ```
 Start the ymodem receive function, storing all files to your local directory:
-```    
-ymodem recv -p /dev/cu.usbserial-02B1CCC5 -b 115200 .
+```bash
+python -m ymodem recv -p /dev/cu.usbserial-02B1CCC5 -b 115200 .
 ```
 
 ## tio (macOS / Linux)
 [tio](https://github.com/tio/tio) is a simple and feature-rich serial terminal that supports YMODEM file transfers directly.
+
+> **Note**: `tio`'s built-in YMODEM support (`ctrl-t y`) is only used to **send** files from your computer to the Agon Light. It does not support receiving files from the Agon Light via YMODEM. To receive files on your computer, use one of the other methods (such as `python -m ymodem recv`, the compiled C/C++ `ymodem` PC tool, or `rz`).
 
 ### Installation (macOS with Homebrew)
 ```bash
@@ -123,7 +125,7 @@ Connect to the Agon (default baudrate is 115200):
 ```bash
 tio /dev/cu.usbserialXXX
 ```
-> **Note**: To exit `tio` at any time, press `ctrl-t` followed by `q`. You can also press `ctrl-t ?` to view all available session key commands.
+> **Tip**: To exit `tio` at any time, press `ctrl-t` followed by `q`. You can also press `ctrl-t ?` to view all available session key commands.
 
 ### Sending files to your Agon
 1. On the Agon, start receive mode:
@@ -137,15 +139,3 @@ tio /dev/cu.usbserialXXX
 3. Press `ctrl-t` followed by `y` to initiate a YMODEM send.
 4. Enter the path of the file to send at the prompt.
 5. Exit `tio` when finished using `ctrl-t` followed by `q`.
-
-### Receiving files to your Mac
-1. Start the MOS utility on Agon with the files to send:
-   ```
-   ymodem -s file1 [file2 ...]
-   ```
-2. Run `rz` with I/O redirection through `tio`:
-   ```bash
-   tio --exec "rz --overwrite --ymodem" /dev/cu.usbserialXXX
-   ```
-   Or use the standalone `ymodem` / `rz` / Python utility.
-
